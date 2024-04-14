@@ -11,4 +11,5 @@ COPY package*.json ./
 RUN npm ci --omit=dev && npm i -g pm2
 COPY --from=builder /app/dist ./dist
 COPY ./ecosystem.config.js ./
+EXPOSE 4000
 ENTRYPOINT [ "pm2-runtime", "start", "ecosystem.config.js" ]
