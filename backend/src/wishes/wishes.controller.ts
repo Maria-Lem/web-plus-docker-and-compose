@@ -20,15 +20,6 @@ import { UpdateWishDto } from './dto/update-wish.dto';
 export class WishesController {
   constructor(private readonly wishesService: WishesService) {}
 
-  @UseGuards(JwtGuard)
-  @Post()
-  async createWish(
-    @Req() req: User,
-    @Body() createWishDto: CreateWishDto,
-  ): Promise<Wish> {
-    return await this.wishesService.createWish(req, createWishDto);
-  }
-
   @Get(':id')
   async findWishById(@Param('id') id: number): Promise<Wish> {
     return await this.wishesService.findWishById(id);
@@ -42,6 +33,15 @@ export class WishesController {
   @Get('top')
   async getTopWishes(): Promise<Wish[]> {
     return await this.wishesService.getTopWishes();
+  }
+
+  @UseGuards(JwtGuard)
+  @Post()
+  async createWish(
+    @Req() req: User,
+    @Body() createWishDto: CreateWishDto,
+  ): Promise<Wish> {
+    return await this.wishesService.createWish(req, createWishDto);
   }
 
   @UseGuards(JwtGuard)
