@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   UseGuards,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { WishesService } from './wishes.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
@@ -41,7 +42,17 @@ export class WishesController {
     @Req() req: User,
     @Body() createWishDto: CreateWishDto,
   ): Promise<Wish> {
-    return await this.wishesService.createWish(req, createWishDto);
+    try {
+      return await this.wishesService.createWish(req, createWishDto);
+    } catch (error) {
+      console.log(error);
+      console.log('req, req');
+      console.log(createWishDto);
+      throw new InternalServerErrorException(
+        'при созданиии карточки произошла ошибка',
+      );
+    }
+    // return await this.wishesService.createWish(req, createWishDto);
   }
 
   @UseGuards(JwtGuard)

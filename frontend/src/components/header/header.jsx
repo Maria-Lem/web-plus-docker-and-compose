@@ -125,6 +125,8 @@ const GiftAddModal = ({ onClose }) => {
   const submitGift = (e) => {
     e.preventDefault();
     const plucked = pluckEmptyFormFields(giftData);
+    console.log('hello');
+    console.log('plucked: ', plucked);
     createCard(plucked).then(() => {
       onClose();
       history.replace({ pathname: "/wishlist" });
