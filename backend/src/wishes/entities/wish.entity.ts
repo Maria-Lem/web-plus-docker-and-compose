@@ -2,6 +2,7 @@ import {
   IsDate,
   IsDecimal,
   IsInt,
+  IsNotEmpty,
   IsString,
   IsUrl,
   Length,
@@ -62,6 +63,7 @@ export class Wish {
   raised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
+  @IsNotEmpty()
   owner: User;
 
   @Column()
