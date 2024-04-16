@@ -48,6 +48,7 @@ export class Wish {
   @Column('decimal', {
     precision: 10,
     scale: 2,
+    default: 0,
   })
   @IsDecimal()
   price: number;
@@ -55,6 +56,7 @@ export class Wish {
   @Column('decimal', {
     precision: 10,
     scale: 2,
+    default: 0,
   })
   @IsDecimal()
   raised: number;
