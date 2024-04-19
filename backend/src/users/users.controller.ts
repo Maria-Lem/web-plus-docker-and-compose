@@ -27,14 +27,14 @@ export class UsersController {
 
   @UseGuards(JwtGuard)
   @Get('me')
-  async getAuthUser(@Req() req: User): Promise<User> {
-    return await this.usersService.findById(req.id);
+  async getAuthUser(@Req() req): Promise<User> {
+    return await this.usersService.findById(req.user.id);
   }
 
   @UseGuards(JwtGuard)
   @Get('me/wishes')
-  async getAuthUserWishes(@Req() req: User): Promise<Wish[]> {
-    return await this.wishesService.getUserWishes(req.id);
+  async getAuthUserWishes(@Req() req): Promise<Wish[]> {
+    return await this.wishesService.getUserWishes(req.user.id);
   }
 
   @Get(':username')
@@ -68,10 +68,10 @@ export class UsersController {
   @UseGuards(JwtGuard)
   @Patch('me')
   async updateAuthUser(
-    @Req() req: User,
+    @Req() req,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
-    return await this.usersService.updateUser(req.id, updateUserDto);
+    return await this.usersService.updateUser(req.user.id, updateUserDto);
   }
 
   @Post('find')

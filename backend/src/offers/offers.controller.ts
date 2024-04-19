@@ -12,6 +12,7 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Offer } from './entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
 import { CreateOfferDto } from './dto/create-offer.dto';
+import { Request } from 'express';
 
 @Controller('offers')
 export class OffersController {
@@ -20,10 +21,13 @@ export class OffersController {
   @UseGuards(JwtGuard)
   @Post()
   async createOffer(
-    @Req() req: User,
+    @Req() req: Request,
     @Body() createOfferDto: CreateOfferDto,
   ): Promise<Offer> {
-    return await this.offersService.createOffer(createOfferDto, req);
+    return await this.offersService.createOffer(
+      createOfferDto,
+      req.user as User,
+    );
   }
 
   @UseGuards(JwtGuard)

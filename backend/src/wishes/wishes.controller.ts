@@ -8,12 +8,10 @@ import {
   Post,
   Req,
   UseGuards,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { WishesService } from './wishes.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Wish } from './entities/wish.entity';
-import { User } from 'src/users/entities/user.entity';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 
@@ -21,9 +19,13 @@ import { UpdateWishDto } from './dto/update-wish.dto';
 export class WishesController {
   constructor(private readonly wishesService: WishesService) {}
 
-  @Get(':id')
-  async findWishById(@Param('id') id: number): Promise<Wish> {
-    return await this.wishesService.findWishById(id);
+  @UseGuards(JwtGuard)
+  @Post()
+  async createWish(
+    @Req() req,
+    @Body() createWishDto: CreateWishDto,
+  ): Promise<Wish> {
+    return await this.wishesService.createWish(req.user, createWishDto);
   }
 
   @Get('last')
@@ -36,44 +38,30 @@ export class WishesController {
     return await this.wishesService.getTopWishes();
   }
 
-  @UseGuards(JwtGuard)
-  @Post()
-  async createWish(
-    @Req() req: User,
-    @Body() createWishDto: CreateWishDto,
-  ): Promise<Wish> {
-    try {
-      return await this.wishesService.createWish(req, createWishDto);
-    } catch (error) {
-      console.log(error);
-      console.log('req, req');
-      console.log(createWishDto);
-      throw new InternalServerErrorException(
-        'при созданиии карточки произошла ошибка',
-      );
-    }
-    // return await this.wishesService.createWish(req, createWishDto);
+  @Get(':id')
+  async findWishById(@Param('id') id: number): Promise<Wish> {
+    return await this.wishesService.findWishById(id);
   }
 
   @UseGuards(JwtGuard)
   @Patch(':id')
   async updateWish(
-    @Req() req: User,
+    @Req() req,
     @Param('id') id: number,
     @Body() updateWishDto: UpdateWishDto,
   ): Promise<Wish> {
-    return await this.wishesService.updateWish(id, req.id, updateWishDto);
+    return await this.wishesService.updateWish(id, req.user.id, updateWishDto);
   }
 
   @UseGuards(JwtGuard)
   @Delete(':id')
-  async deleteWish(@Req() req: User, @Param('id') id: number): Promise<Wish> {
-    return await this.wishesService.deleteWish(id, req.id);
+  async deleteWish(@Req() req, @Param('id') id: number): Promise<Wish> {
+    return await this.wishesService.deleteWish(id, req.user.id);
   }
 
   @UseGuards(JwtGuard)
   @Post(':id/copy')
-  async copyWish(@Req() req: User, @Param('id') id: number): Promise<Wish> {
-    return await this.wishesService.copyWish(id, req);
+  async copyWish(@Req() req, @Param('id') id: number): Promise<Wish> {
+    return await this.wishesService.copyWish(id, req.user);
   }
 }

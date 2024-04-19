@@ -12,7 +12,6 @@ import {
 import { WishlistsService } from './wishlists.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Wishlist } from './entities/wishlists.entity';
-import { User } from 'src/users/entities/user.entity';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 
@@ -27,10 +26,13 @@ export class WishlistsController {
 
   @Post()
   async createWishlist(
-    @Req() req: User,
+    @Req() req,
     @Body() createWishlistDto: CreateWishlistDto,
   ): Promise<Wishlist> {
-    return await this.wishlistsService.createWishlist(createWishlistDto, req);
+    return await this.wishlistsService.createWishlist(
+      createWishlistDto,
+      req.user,
+    );
   }
 
   @UseGuards(JwtGuard)
@@ -42,23 +44,20 @@ export class WishlistsController {
   @UseGuards(JwtGuard)
   @Patch(':id')
   async updateWishlist(
-    @Req() req: User,
+    @Req() req,
     @Param('id') id: number,
     @Body() updateWishlistDto: UpdateWishlistDto,
   ): Promise<Wishlist> {
     return await this.wishlistsService.updateWishlist(
       id,
-      req.id,
+      req.user.id,
       updateWishlistDto,
     );
   }
 
   @UseGuards(JwtGuard)
   @Delete(':id')
-  async deleteWishlist(
-    @Req() req: User,
-    @Param('id') id: number,
-  ): Promise<Wishlist> {
-    return await this.wishlistsService.deleteWishlist(id, req.id);
+  async deleteWishlist(@Req() req, @Param('id') id: number): Promise<Wishlist> {
+    return await this.wishlistsService.deleteWishlist(id, req.user.id);
   }
 }
