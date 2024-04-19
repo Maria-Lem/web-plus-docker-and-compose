@@ -79,11 +79,7 @@ export class WishesService {
   }
 
   async findMany(items: number[]): Promise<Wish[]> {
-    return await this.wishesRepository.find({
-      where: {
-        id: In(items),
-      },
-    });
+    return await this.wishesRepository.findBy({ id: In(items) });
   }
 
   async findAll(): Promise<Wish[]> {

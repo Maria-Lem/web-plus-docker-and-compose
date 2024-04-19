@@ -24,21 +24,22 @@ export class WishlistsController {
     return await this.wishlistsService.findWishlists();
   }
 
+  @UseGuards(JwtGuard)
+  @Get(':id')
+  async getWishlistById(@Param('id') id: number): Promise<Wishlist> {
+    return await this.wishlistsService.findWishlistById(id);
+  }
+
   @Post()
   async createWishlist(
     @Req() req,
     @Body() createWishlistDto: CreateWishlistDto,
   ): Promise<Wishlist> {
+    console.log(req);
     return await this.wishlistsService.createWishlist(
       createWishlistDto,
       req.user,
     );
-  }
-
-  @UseGuards(JwtGuard)
-  @Get(':id')
-  async getWishlistById(@Param('id') id: number): Promise<Wishlist> {
-    return await this.wishlistsService.findWishlistById(id);
   }
 
   @UseGuards(JwtGuard)

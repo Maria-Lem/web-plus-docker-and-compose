@@ -1,6 +1,6 @@
 import {
-  IsArray,
-  IsNumber,
+  // IsArray,
+  // IsNumber,
   IsOptional,
   IsString,
   IsUrl,
@@ -22,8 +22,8 @@ export class CreateWishlistDto {
   @IsOptional()
   image: string;
 
-  @IsArray()
-  @IsNumber()
+  // @IsArray()
+  // @IsNumber()
   @IsOptional()
   itemsId: number[];
 }

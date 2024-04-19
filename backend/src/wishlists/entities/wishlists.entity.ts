@@ -1,4 +1,11 @@
-import { IsDate, IsString, IsUrl, Length, MaxLength } from 'class-validator';
+import {
+  IsDate,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Length,
+  // MaxLength,
+} from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -32,18 +39,18 @@ export class Wishlist {
   name: string;
 
   @Column()
-  @IsString()
-  @MaxLength(1500)
-  description: string;
-
-  @Column()
   @IsUrl()
   image: string;
 
   @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;
 
-  @ManyToMany(() => Wish)
+  @ManyToMany(() => Wish, (wish) => wish.name)
   @JoinTable()
+  @IsOptional()
   items: Wish[];
+
+  // @ManyToMany(() => Wish)
+  // @JoinTable()
+  // items: Wish[];
 }
